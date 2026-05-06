@@ -551,7 +551,7 @@
     <div class="main-container">
         <div class="car-list-panel">
             <div class="panel-header">
-                <h3>📋 Автомобили</h3>
+                <h3>Автомобили</h3>
                 <div class="search-box">
                     <input type="text" id="search-input" placeholder="Поиск по модели..." onkeyup="applyFilters()">
                 </div>
@@ -682,13 +682,13 @@
             div.onclick = () => selectCar(car.id);
             div.innerHTML = `
                 <div class="car-model">
-                    <span>🚙 ${car.model}</span>
+                    <span>${car.model}</span>
                     <button class="favorite-btn" onclick="toggleFavorite(${car.id}, event)" style="background:none;border:none;cursor:pointer;">
                         <i class="fas ${isFav ? 'fa-star' : 'fa-star-o'}" style="color:#ffc107;"></i>
                     </button>
                 </div>
-                <div class="car-details" style="margin:0.4rem 0; font-size:0.8rem;">🎨 ${car.color} | 🔢 ${car.plate}</div>
-                <div class="car-price">💰 ${car.price} ₽/мин</div>
+                <div class="car-details" style="margin:0.4rem 0; font-size:0.8rem;">${car.color} |  ${car.plate}</div>
+                <div class="car-price">${car.price} ₽/мин</div>
             `;
             container.appendChild(div);
         });
@@ -724,7 +724,7 @@
         document.getElementById('selected-car-info').innerHTML = `
             <h4>✅ ${car.model}</h4>
             <p>${car.color} | ${car.plate}</p>
-            <p>💰 ${car.price} ₽/мин</p>
+            <p>${car.price} ₽/мин</p>
         `;
         pricePerMinute = car.price;
         document.getElementById('trip-controls').style.display = 'block';
