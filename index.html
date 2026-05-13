@@ -8,415 +8,90 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш-ключ-API&lang=ru_RU" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary: #0a1c2a;
-            --primary-light: #1e3a4d;
-            --accent: #2e7a6e;
-            --accent-light: #4a9e8a;
-            --text-light: #e0e0e0;
-            --text-dark: #1e2a32;
-            --bg-light: #eef2f5;
-            --white: #ffffff;
-            --gray: #6c757d;
-            --warning: #ffc107;
-            --danger: #b14a4a;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
-        body.dark {
-            --bg-light: #1a1a2e;
-            --white: #16213e;
-            --text-dark: #e0e0e0;
-        }
-
-        /* Шапка */
-        .header {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        .logo span {
-            color: var(--accent-light);
-        }
-        .nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 2rem;
-            transition: 0.3s;
-        }
-        .nav a:hover {
-            color: var(--accent-light);
-        }
-        .theme-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin-left: 1rem;
-        }
-
-        /* Герой секция */
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            padding: 2rem;
-        }
-        .hero-content h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        /* Карточки городов */
-        .cities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .city-card {
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .city-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .city-image {
-            height: 160px;
-            background-size: cover;
-            background-position: center;
-            background-color: #2e7a6e;
-        }
-        .city-info {
-            padding: 1rem;
-            text-align: center;
-            background: var(--white);
-        }
-        .city-info h3 {
-            margin-bottom: 0.3rem;
-            color: var(--primary);
-        }
-        .city-info p {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-        .city-btn-select {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            margin-top: 0.8rem;
-            cursor: pointer;
-            width: 100%;
-            font-size: 0.9rem;
-        }
-
-        /* Секции */
-        .section {
-            padding: 5rem 10%;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 3rem;
-            color: var(--primary);
-        }
-
-        /* Преимущества */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        .feature-card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            transition: 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-        .feature-card h3 {
-            margin-bottom: 0.5rem;
-        }
-        .feature-card p {
-            color: var(--gray);
-        }
-
-        /* Отзывы */
-        .reviews-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        .review-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-        .review-stars {
-            color: var(--warning);
-            margin-bottom: 1rem;
-        }
-        .review-text {
-            font-style: italic;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-        .review-author {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* CTA */
-        .cta {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            text-align: center;
-            padding: 4rem;
-            border-radius: 30px;
-            margin: 2rem 10%;
-        }
-        .cta h2 {
-            margin-bottom: 1rem;
-        }
-
-        .footer {
-            background: var(--primary);
-            color: var(--text-light);
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        /* Страница каршеринга */
-        .carsharing-page {
-            display: none;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .cs-header {
-            background: var(--primary);
-            color: white;
-            padding: 0.8rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 65px;
-        }
-        .back-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            cursor: pointer;
-        }
-        .main-container {
-            display: grid;
-            grid-template-columns: 340px 1fr 340px;
-            gap: 1rem;
-            padding: 1rem;
-            height: calc(100vh - 105px);
-            overflow: hidden;
-        }
-        .car-list-panel {
-            background: var(--white);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-        .panel-header {
-            padding: 1rem 1rem 0 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            flex-shrink: 0;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 40px;
-            margin-bottom: 0.8rem;
-        }
-        .filter-form {
-            background: #f8fafc;
-            padding: 0.8rem;
-            border-radius: 16px;
-            margin-bottom: 0.8rem;
-        }
-        .filter-row {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 0.6rem;
-        }
-        .filter-row input, .filter-row select {
-            padding: 0.6rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-        }
-        .filter-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .filter-actions button {
-            flex: 1;
-            padding: 0.6rem;
-            border-radius: 40px;
-            cursor: pointer;
-        }
-        .btn-apply {
-            background: var(--accent);
-            color: white;
-            border: none;
-        }
-        .btn-reset {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-        }
-        .car-list-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-        .car-item {
-            background: var(--white);
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 0.9rem;
-            margin-bottom: 0.8rem;
-            cursor: pointer;
-        }
-        .car-item.selected {
-            border-left: 4px solid var(--accent);
-        }
-        .car-model {
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-        }
-        .car-price {
-            font-weight: 700;
-            color: var(--accent);
-        }
-        .map-panel {
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        .control-panel {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-        .timer-display {
-            background: #f8fafc;
-            font-size: 2rem;
-            text-align: center;
-            padding: 0.6rem;
-            border-radius: 16px;
-            margin: 0.8rem 0;
-        }
-        .btn-success {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.7rem;
-            border-radius: 40px;
-            width: 100%;
-            cursor: pointer;
-        }
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 0.7rem;
-            border-radius: 40px;
-            width: 100%;
-            cursor: pointer;
-        }
-        .stats-panel {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 0.8rem;
-            margin-top: 0.8rem;
-        }
-        .stats-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.4rem;
-        }
-
-        @media (max-width: 992px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                height: auto;
-                overflow-y: auto;
-            }
-            .map-panel { height: 400px; }
-        }
+            --primary: #0a1c2a; --primary-light: #1e3a4d; --accent: #2e7a6e;
+            --accent-light: #4a9e8a; --text-light: #e0e0e0; --text-dark: #1e2a32;
+            --bg-light: #eef2f5; --white: #ffffff; --gray: #6c757d;
+            --warning: #ffc107; --danger: #b14a4a;
+        }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
+        body.dark { --bg-light: #1a1a2e; --white: #16213e; --text-dark: #e0e0e0; }
+        .header { background: var(--primary); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .logo { font-size: 1.5rem; font-weight: 600; }
+        .logo span { color: var(--accent-light); }
+        .nav a { color: white; text-decoration: none; margin-left: 2rem; transition: 0.3s; }
+        .nav a:hover { color: var(--accent-light); }
+        .theme-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; margin-left: 1rem; }
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 2rem; }
+        .hero-content h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero-content p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+        .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+        .city-card { background: var(--white); border-radius: 20px; overflow: hidden; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .city-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .city-image { height: 160px; background-size: cover; background-position: center; background-color: #2e7a6e; }
+        .city-info { padding: 1rem; text-align: center; background: var(--white); }
+        .city-info h3 { margin-bottom: 0.3rem; color: var(--primary); }
+        .city-info p { font-size: 0.85rem; color: var(--gray); }
+        .city-btn-select { background: var(--accent); color: white; border: none; padding: 0.5rem 1rem; border-radius: 30px; margin-top: 0.8rem; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .section { padding: 5rem 10%; }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; color: var(--primary); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .feature-card { background: var(--white); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: 0.3s; }
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-icon { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+        .feature-card h3 { margin-bottom: 0.5rem; }
+        .feature-card p { color: var(--gray); }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .review-card { background: var(--white); padding: 1.5rem; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .review-stars { color: var(--warning); margin-bottom: 1rem; }
+        .review-text { font-style: italic; margin-bottom: 1rem; line-height: 1.5; }
+        .review-author { font-weight: 600; color: var(--primary); }
+        .cta { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; text-align: center; padding: 4rem; border-radius: 30px; margin: 2rem 10%; }
+        .cta h2 { margin-bottom: 1rem; }
+        .footer { background: var(--primary); color: var(--text-light); text-align: center; padding: 2rem; margin-top: 2rem; }
+        .carsharing-page { display: none; height: 100vh; overflow: hidden; }
+        .cs-header { background: var(--primary); color: white; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; height: 65px; }
+        .back-btn { background: var(--accent); color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; cursor: pointer; }
+        .main-container { display: grid; grid-template-columns: 340px 1fr 340px; gap: 1rem; padding: 1rem; height: calc(100vh - 105px); overflow: hidden; }
+        .car-list-panel { background: var(--white); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; }
+        .panel-header { padding: 1rem 1rem 0 1rem; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
+        .search-box input { width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 40px; margin-bottom: 0.8rem; }
+        .filter-form { background: #f8fafc; padding: 0.8rem; border-radius: 16px; margin-bottom: 0.8rem; }
+        .filter-row { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.6rem; }
+        .filter-row input, .filter-row select { padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 12px; }
+        .filter-actions { display: flex; gap: 0.5rem; }
+        .filter-actions button { flex: 1; padding: 0.6rem; border-radius: 40px; cursor: pointer; }
+        .btn-apply { background: var(--accent); color: white; border: none; }
+        .btn-reset { background: #f8fafc; border: 1px solid #cbd5e1; }
+        .car-list-scroll { flex: 1; overflow-y: auto; padding: 1rem; }
+        .car-item { background: var(--white); border: 1px solid #e2e8f0; border-radius: 14px; padding: 0.9rem; margin-bottom: 0.8rem; cursor: pointer; }
+        .car-item.selected { border-left: 4px solid var(--accent); }
+        .car-model { font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .car-price { font-weight: 700; color: var(--accent); margin-top: 0.3rem; }
+        .car-details { font-size: 0.8rem; color: var(--gray); margin: 0.3rem 0; }
+        .favorite-btn { background: none; border: none; cursor: pointer; font-size: 1rem; }
+        .fa-star { color: #ffc107; }
+        .fa-star-o { color: #888; }
+        .map-panel { border-radius: 20px; overflow: hidden; position: relative; }
+        #map { width: 100%; height: 100%; }
+        .control-panel { background: var(--white); border-radius: 20px; padding: 1rem; overflow-y: auto; }
+        .selected-car-info { background: #f8fafc; border-radius: 16px; padding: 0.8rem; margin-bottom: 0.8rem; border-left: 3px solid var(--accent); }
+        .timer-display { background: #f8fafc; font-size: 2rem; text-align: center; padding: 0.6rem; border-radius: 16px; margin: 0.8rem 0; font-family: monospace; }
+        .cost-display { background: #e2f0ea; color: var(--accent); font-size: 1.5rem; text-align: center; padding: 0.6rem; border-radius: 16px; margin: 0.8rem 0; font-weight: bold; }
+        .btn-success { background: var(--accent); color: white; border: none; padding: 0.7rem; border-radius: 40px; width: 100%; cursor: pointer; margin-bottom: 0.5rem; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 0.7rem; border-radius: 40px; width: 100%; cursor: pointer; }
+        .stats-panel { background: #f8fafc; border-radius: 16px; padding: 0.8rem; margin-top: 0.8rem; }
+        .stats-item { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
+        .history-panel { margin-top: 0.8rem; padding: 0.8rem; background: #f8fafc; border-radius: 16px; max-height: 150px; overflow-y: auto; }
+        .history-item { font-size: 0.75rem; padding: 0.3rem 0; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; }
+        .legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; font-size: 11px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .legend span { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 4px; }
+        @media (max-width: 992px) { .main-container { grid-template-columns: 1fr; height: auto; overflow-y: auto; } .map-panel { height: 400px; } }
     </style>
 </head>
 <body>
 
-<!-- ГЛАВНАЯ СТРАНИЦА -->
 <div id="main-page">
     <header class="header">
         <div class="logo">Car<span>Share</span></div>
@@ -432,174 +107,88 @@
         <div class="hero-content">
             <h1>Каршеринг в твоём городе</h1>
             <p>Арендуй автомобиль по минутам. Никаких скрытых платежей.</p>
-          <div class="cities-grid">
-    <div class="city-card" onclick="selectCity('Сургут', 61.254, 73.396)">
-        <div class="city-image" style="background-image: url('images/surgut.jpg'); background-size: cover; background-position: center;"></div>
-        <div class="city-info">
-            <h3>Сургут</h3>
-            <p>Нефтяная столица</p>
-            <button class="city-btn-select">Выбрать →</button>
+            <div class="cities-grid">
+                <div class="city-card" onclick="selectCity('Сургут', 61.254, 73.396)">
+                    <div class="city-image" style="background-image: url('images/surgut.jpg'); background-size: cover; background-position: center;"></div>
+                    <div class="city-info"><h3>Сургут</h3><p>Нефтяная столица</p><button class="city-btn-select">Выбрать →</button></div>
+                </div>
+                <div class="city-card" onclick="selectCity('Тюмень', 57.153, 65.534)">
+                    <div class="city-image" style="background-image: url('images/tyumen.jpg'); background-size: cover; background-position: center;"></div>
+                    <div class="city-info"><h3>Тюмень</h3><p>Первая столица Сибири</p><button class="city-btn-select">Выбрать →</button></div>
+                </div>
+                <div class="city-card" onclick="selectCity('Ханты-Мансийск', 61.006, 69.018)">
+                    <div class="city-image" style="background-image: url('images/khanty.jpg'); background-size: cover; background-position: center;"></div>
+                    <div class="city-info"><h3>Ханты-Мансийск</h3><p>Сердце Югры</p><button class="city-btn-select">Выбрать →</button></div>
+                </div>
+                <div class="city-card" onclick="selectCity('Омск', 54.988, 73.324)">
+                    <div class="city-image" style="background-image: url('images/omsk.jpg'); background-size: cover; background-position: center;"></div>
+                    <div class="city-info"><h3>Омск</h3><p>Город на Иртыше</p><button class="city-btn-select">Выбрать →</button></div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="city-card" onclick="selectCity('Тюмень', 57.153, 65.534)">
-        <div class="city-image" style="background-image: url('images/tyumen.jpg'); background-size: cover; background-position: center;"></div>
-        <div class="city-info">
-            <h3>Тюмень</h3>
-            <p>Первая столица Сибири</p>
-            <button class="city-btn-select">Выбрать →</button>
-        </div>
-    </div>
-    <div class="city-card" onclick="selectCity('Ханты-Мансийск', 61.006, 69.018)">
-        <div class="city-image" style="background-image: url('images/khanty.jpg'); background-size: cover; background-position: center;"></div>
-        <div class="city-info">
-            <h3>Ханты-Мансийск</h3>
-            <p>Сердце Югры</p>
-            <button class="city-btn-select">Выбрать →</button>
-        </div>
-    </div>
-    <div class="city-card" onclick="selectCity('Омск', 54.988, 73.324)">
-        <div class="city-image" style="background-image: url('images/omsk.jpg'); background-size: cover; background-position: center;"></div>
-        <div class="city-info">
-            <h3>Омск</h3>
-            <p>Город на Иртыше</p>
-            <button class="city-btn-select">Выбрать →</button>
-        </div>
-    </div>
-</div>
     </section>
 
     <section id="why" class="section">
         <h2 class="section-title">Почему стоит выбирать нас</h2>
         <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-clock"></i></div>
-                <h3>Поминутная оплата</h3>
-                <p>Платите только за те минуты, которые действительно ездите</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-car"></i></div>
-                <h3>Большой выбор авто</h3>
-                <p>От эконом-класса до бизнес-седанов и электромобилей</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Полная страховка</h3>
-                <p>Каждый автомобиль застрахован по КАСКО</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-headset"></i></div>
-                <h3>Поддержка 24/7</h3>
-                <p>Круглосуточная поддержка в любой ситуации</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-gem"></i></div>
-                <h3>Скидки до 20%</h3>
-                <p>Каждая 3-я поездка со скидкой 10%</p>
-            </div>
-           <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
-                <h3>Удобная карта</h3>
-                <p>Интерактивная карта с поиском ближайших автомобилей</p>
-            </div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-clock"></i></div><h3>Поминутная оплата</h3><p>Платите только за те минуты, которые действительно ездите</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-car"></i></div><h3>Большой выбор авто</h3><p>От эконом-класса до бизнес-седанов и электромобилей</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>Полная страховка</h3><p>Каждый автомобиль застрахован по КАСКО</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-headset"></i></div><h3>Поддержка 24/7</h3><p>Круглосуточная поддержка в любой ситуации</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-gem"></i></div><h3>Скидки до 20%</h3><p>Каждая 3-я поездка со скидкой 10%</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div><h3>Удобная карта</h3><p>Интерактивная карта с поиском ближайших автомобилей</p></div>
         </div>
     </section>
 
     <section id="reviews" class="section">
         <h2 class="section-title">Что говорят наши клиенты</h2>
         <div class="reviews-grid">
-            <div class="review-card">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Отличный сервис! Забронировал машину за 2 минуты, карта показывает реальное расположение авто."</p>
-                <p class="review-author">Алексей Иванов</p>
-            </div>
-            <div class="review-card">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Очень удобно, что можно арендовать авто прямо с телефона. Машины чистые, заправленные."</p>
-                <p class="review-author">Екатерина Смирнова</p>
-            </div>
-            <div class="review-card">
-                <div class="review-stars">★★★★☆</div>
-                <p class="review-text">"Пользуюсь уже полгода. Быстрый старт, понятный таймер, честный расчёт."</p>
-                <p class="review-author">Дмитрий Петров</p>
-            </div>
-            <div class="review-card">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Лучший каршеринг в городе! Автопарк обновляется регулярно."</p>
-                <p class="review-author">Мария Кузнецова</p>
-            </div>
+            <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Отличный сервис! Забронировал машину за 2 минуты, карта показывает реальное расположение авто."</p><p class="review-author">Алексей Иванов</p></div>
+            <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Очень удобно, что можно арендовать авто прямо с телефона. Машины чистые, заправленные."</p><p class="review-author">Екатерина Смирнова</p></div>
+            <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Пользуюсь уже полгода. Быстрый старт, понятный таймер, честный расчёт."</p><p class="review-author">Дмитрий Петров</p></div>
+            <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Лучший каршеринг в городе! Автопарк обновляется регулярно."</p><p class="review-author">Мария Кузнецова</p></div>
         </div>
     </section>
 
-    <div class="cta">
-        <h2>Готовы начать?</h2>
-        <p>Выберите город в карточке выше и отправляйтесь в первую поездку уже сегодня</p>
-    </div>
-
-    <footer class="footer">
-        <p>© 2026 Каршеринг Сургут | Волков Сергей Дмитриевич | Учебный проект</p>
-        <p style="margin-top: 0.5rem; font-size: 0.8rem;">АНПОО «Сургутский институт экономики, управления и права»</p>
-    </footer>
+    <div class="cta"><h2>Готовы начать?</h2><p>Выберите город в карточке выше и отправляйтесь в первую поездку уже сегодня</p></div>
+    <footer class="footer"><p>© 2026 Каршеринг Сургут | Волков Сергей Дмитриевич | Учебный проект</p><p style="margin-top: 0.5rem; font-size: 0.8rem;">АНПОО «Сургутский институт экономики, управления и права»</p></footer>
 </div>
 
-<!-- СТРАНИЦА КАРШЕРИНГА -->
 <div id="carsharing-page" class="carsharing-page">
     <div class="cs-header">
         <h1>Каршеринг <span id="city-name">Сургут</span></h1>
         <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> На главную</button>
     </div>
-
     <div class="main-container">
         <div class="car-list-panel">
             <div class="panel-header">
                 <h3>Автомобили</h3>
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Поиск по модели..." onkeyup="applyFilters()">
-                </div>
+                <div class="search-box"><input type="text" id="search-input" placeholder="Поиск по модели..." onkeyup="applyFilters()"></div>
                 <div class="filter-form">
-                    <div class="filter-row">
-                        <select id="filter-class">
-                            <option value="">Все классы</option>
-                            <option value="economy">Эконом</option>
-                            <option value="comfort">Комфорт</option>
-                            <option value="business">Бизнес</option>
-                        </select>
-                    </div>
-                    <div class="filter-row">
-                        <input type="number" id="filter-price-min" placeholder="Цена от (₽/мин)">
-                        <input type="number" id="filter-price-max" placeholder="Цена до (₽/мин)">
-                    </div>
-                    <div class="filter-actions">
-                        <button class="btn-apply" onclick="applyFilters()">Применить</button>
-                        <button class="btn-reset" onclick="resetFilters()">Сброс</button>
-                    </div>
+                    <div class="filter-row"><select id="filter-class"><option value="">Все классы</option><option value="economy">Эконом</option><option value="comfort">Комфорт</option><option value="business">Бизнес</option></select></div>
+                    <div class="filter-row"><input type="number" id="filter-price-min" placeholder="Цена от (₽/мин)"><input type="number" id="filter-price-max" placeholder="Цена до (₽/мин)"></div>
+                    <div class="filter-actions"><button class="btn-apply" onclick="applyFilters()">Применить</button><button class="btn-reset" onclick="resetFilters()">Сброс</button></div>
                 </div>
             </div>
-            <div class="car-list-scroll">
-                <div id="car-list"></div>
-            </div>
+            <div class="car-list-scroll"><div id="car-list"></div></div>
         </div>
-
-        <div class="map-panel">
-            <div id="map"></div>
-        </div>
-
+        <div class="map-panel"><div id="map"></div><div class="legend"><p><span style="background:#2e7a6e;"></span> Топливо > 70%</p><p><span style="background:#f39c12;"></span> Топливо 30-70%</p><p><span style="background:#e74c3c;"></span> Топливо < 30%</p></div></div>
         <div class="control-panel">
             <h3>Управление поездкой</h3>
-            <div id="selected-car-info" class="selected-car-info">
-                <h4>Выберите автомобиль</h4>
-                <p>Кликните на метку на карте или в списке</p>
-            </div>
+            <div id="selected-car-info" class="selected-car-info"><h4>Выберите автомобиль</h4><p>Кликните на метку на карте или в списке</p></div>
             <div id="trip-controls" style="display: none;">
                 <div class="timer-display" id="timer">00:00</div>
                 <div class="cost-display" id="cost">0 ₽</div>
+                <div class="stats-item"><span>Скидка:</span><span id="discount-badge">0%</span></div>
                 <button class="btn-success" id="start-btn" onclick="startTrip()">Начать поездку</button>
                 <button class="btn-danger" id="end-btn" onclick="endTrip()" style="display: none;">Завершить</button>
             </div>
             <div class="stats-panel">
                 <div class="stats-item"><span>Всего авто:</span><span id="total-cars">0</span></div>
                 <div class="stats-item"><span>Средняя цена:</span><span id="avg-price">0</span></div>
-                <div class="stats-item"><span>Избранное:</span><span id="fav-count">0</span></div>
+                <div class="stats-item"><span>Поездок:</span><span id="trip-count">0</span></div>
             </div>
+            <div class="history-panel"><h4>История поездок</h4><div id="history-list"></div></div>
         </div>
     </div>
 </div>
@@ -614,8 +203,10 @@
     let currentCost = 0;
     let allCars = [];
     let filteredCars = [];
+    let userLocation = null;
     let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     let tripCount = parseInt(localStorage.getItem('tripCount') || '0');
+    let history = JSON.parse(localStorage.getItem('history') || '[]');
 
     const carsData = [
         { id: 1, model: "Kia Rio", color: "Белый", plate: "А123АА", fuel: 85, price: 10, class: "economy", lat: 61.254, lon: 73.396 },
@@ -629,6 +220,50 @@
         { id: 9, model: "Mercedes C-Class", color: "Серый", plate: "У468УУ", fuel: 86, price: 28, class: "business", lat: 61.268, lon: 73.384 },
         { id: 10, model: "Tesla Model 3", color: "Чёрный", plate: "Е681ЕЕ", fuel: 94, price: 29, class: "business", lat: 61.270, lon: 73.382 }
     ];
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    function getDistanceToUser(car) {
+        if (!userLocation) return Infinity;
+        return calculateDistance(userLocation.lat, userLocation.lon, car.lat, car.lon);
+    }
+
+    function updateHistoryDisplay() {
+        let container = document.getElementById('history-list');
+        if (!container) return;
+        if (history.length === 0) { container.innerHTML = '<div style="text-align:center;color:gray;">Нет поездок</div>'; return; }
+        container.innerHTML = '';
+        history.forEach(h => {
+            let div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `<span>${h.car}</span><span>${h.cost} ₽ ${h.discounted ? '🔖' : ''}</span><span>${h.date}</span>`;
+            container.appendChild(div);
+        });
+    }
+
+    function addToHistory(carModel, cost, wasDiscounted) {
+        let actualCost = wasDiscounted ? cost * 0.9 : cost;
+        history.unshift({ car: carModel, cost: actualCost.toFixed(2), date: new Date().toLocaleTimeString(), discounted: wasDiscounted });
+        if (history.length > 5) history.pop();
+        localStorage.setItem('history', JSON.stringify(history));
+        updateHistoryDisplay();
+    }
+
+    function updateDiscountBadge() {
+        let discount = (tripCount > 0 && tripCount % 3 === 0) ? 10 : 0;
+        let badge = document.getElementById('discount-badge');
+        if (badge) badge.innerHTML = discount + '%';
+        if (discount > 0) document.getElementById('cost').style.color = '#ffc107';
+        else document.getElementById('cost').style.color = 'var(--accent)';
+        document.getElementById('trip-count').innerHTML = tripCount;
+    }
 
     function selectCity(cityName, lat, lon) {
         document.getElementById('city-name').innerText = cityName;
@@ -644,26 +279,30 @@
     }
 
     function initCarsharing(lat, lon) {
-        allCars = carsData;
-        filteredCars = [...allCars];
-        renderCarList();
+        allCars = [...carsData];
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+                allCars.forEach(car => car.distance = getDistanceToUser(car));
+                allCars.sort((a,b) => (a.distance || 999) - (b.distance || 999));
+                filteredCars = [...allCars];
+                renderCarList();
+            }, () => { filteredCars = [...allCars]; renderCarList(); });
+        } else { filteredCars = [...allCars]; renderCarList(); }
         updateStats();
-        
+        updateHistoryDisplay();
+        updateDiscountBadge();
         ymaps.ready(() => {
-            map = new ymaps.Map('map', {
-                center: [lat, lon],
-                zoom: 13,
-                controls: ['zoomControl', 'geolocationControl']
-            });
+            map = new ymaps.Map('map', { center: [lat, lon], zoom: 13, controls: ['zoomControl', 'geolocationControl'] });
+            if (userLocation) {
+                let userMark = new ymaps.Placemark([userLocation.lat, userLocation.lon], { balloonContent: 'Вы здесь' }, { preset: 'islands#blueCircleDotIcon' });
+                map.geoObjects.add(userMark);
+            }
             placemarks.forEach(pm => map.geoObjects.remove(pm));
             placemarks = [];
             allCars.forEach(car => {
                 let color = car.fuel > 70 ? '#2e7a6e' : (car.fuel > 30 ? '#f39c12' : '#e74c3c');
-                let mark = new ymaps.Placemark(
-                    [car.lat, car.lon],
-                    { balloonContent: `<strong>${car.model}</strong><br>${car.color} | ${car.plate}<br>⛽ ${car.fuel}%<br>💰 ${car.price} ₽/мин` },
-                    { preset: 'islands#carIcon', iconColor: color }
-                );
+                let mark = new ymaps.Placemark([car.lat, car.lon], { balloonContent: `<strong>${car.model}</strong><br>${car.color} | ${car.plate}<br>⛽ ${car.fuel}%<br>${car.price} ₽/мин` }, { preset: 'islands#carIcon', iconColor: color });
                 mark.events.add('click', () => selectCar(car.id));
                 map.geoObjects.add(mark);
                 placemarks.push(mark);
@@ -674,25 +313,20 @@
     function renderCarList() {
         let container = document.getElementById('car-list');
         if (!container) return;
+        let searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
+        let filtered = filteredCars.filter(c => c.model.toLowerCase().includes(searchTerm));
         container.innerHTML = '';
-        filteredCars.forEach(car => {
+        filtered.forEach(car => {
             let isFav = favorites.includes(car.id);
             let div = document.createElement('div');
             div.className = `car-item ${selectedCarId === car.id ? 'selected' : ''}`;
             div.onclick = () => selectCar(car.id);
-            div.innerHTML = `
-                <div class="car-model">
-                    <span>${car.model}</span>
-                    <button class="favorite-btn" onclick="toggleFavorite(${car.id}, event)" style="background:none;border:none;cursor:pointer;">
-                        <i class="fas ${isFav ? 'fa-star' : 'fa-star-o'}" style="color:#ffc107;"></i>
-                    </button>
-                </div>
-                <div class="car-details" style="margin:0.4rem 0; font-size:0.8rem;">${car.color} |  ${car.plate}</div>
-                <div class="car-price">${car.price} ₽/мин</div>
-            `;
+            div.innerHTML = `<div class="car-model"><span>${car.model}</span><button class="favorite-btn" onclick="toggleFavorite(${car.id}, event)"><i class="fas ${isFav ? 'fa-star' : 'fa-star-o'}"></i></button></div>
+                <div class="car-details">${car.color} | ${car.plate} | ⛽ ${car.fuel}%</div>
+                <div class="car-price"> ${car.price} ₽/мин</div>`;
             container.appendChild(div);
         });
-        document.getElementById('total-cars').innerHTML = filteredCars.length;
+        document.getElementById('total-cars').innerHTML = filtered.length;
         document.getElementById('fav-count').innerHTML = favorites.length;
     }
 
@@ -721,42 +355,48 @@
         selectedCarId = carId;
         let car = allCars.find(c => c.id == carId);
         if (!car) return;
-        document.getElementById('selected-car-info').innerHTML = `
-            <h4>✅ ${car.model}</h4>
-            <p>${car.color} | ${car.plate}</p>
-            <p>${car.price} ₽/мин</p>
-        `;
+        document.getElementById('selected-car-info').innerHTML = `<h4>✅ ${car.model}</h4><p>${car.color} | ${car.plate} | ⛽ ${car.fuel}%</p><p>💰 ${car.price} ₽/мин</p>`;
         pricePerMinute = car.price;
         document.getElementById('trip-controls').style.display = 'block';
         renderCarList();
+        updateDiscountBadge();
     }
 
     function startTrip() {
-        if (!selectedCarId) return;
+        if (!selectedCarId) { alert('Выберите автомобиль!'); return; }
+        if (timerInterval) clearInterval(timerInterval);
         currentTripId = Date.now();
         tripStartTime = new Date();
         document.getElementById('start-btn').style.display = 'none';
         document.getElementById('end-btn').style.display = 'block';
-        if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let minutes = Math.floor((new Date() - tripStartTime) / 60000);
             let seconds = Math.floor(((new Date() - tripStartTime) % 60000) / 1000);
             document.getElementById('timer').innerHTML = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-            currentCost = minutes * pricePerMinute;
+            let discount = (tripCount > 0 && tripCount % 3 === 0) ? 0.9 : 1;
+            currentCost = minutes * pricePerMinute * discount;
             document.getElementById('cost').innerHTML = `${currentCost.toFixed(2)} ₽`;
+            let discountPercent = (tripCount > 0 && tripCount % 3 === 0) ? 10 : 0;
+            document.getElementById('discount-badge').innerHTML = discountPercent + '%';
+            if (discountPercent > 0) document.getElementById('cost').style.color = '#ffc107';
+            else document.getElementById('cost').style.color = 'var(--accent)';
         }, 1000);
     }
 
-function endTrip() {
-    if (!currentTripId) return;
-    
-  
-    if (confirm(`Завершить поездку? Стоимость: ${currentCost.toFixed(2)} ₽`)) {
+    function endTrip() {
+        if (!currentTripId) return;
         clearInterval(timerInterval);
-        alert(`Поездка завершена! Стоимость: ${currentCost.toFixed(2)} ₽`);
+        let wasDiscounted = (tripCount > 0 && tripCount % 3 === 0);
+        let finalCost = wasDiscounted ? currentCost : currentCost;
+        let car = allCars.find(c => c.id == selectedCarId);
+        if (car) addToHistory(car.model, currentCost, wasDiscounted);
+        alert(`Поездка завершена! Стоимость: ${finalCost.toFixed(2)} ₽${wasDiscounted ? ' (со скидкой 10%!)' : ''}`);
+        tripCount++;
+        localStorage.setItem('tripCount', tripCount);
+        updateDiscountBadge();
         location.reload();
     }
-}
+
     function toggleFavorite(carId, event) {
         event.stopPropagation();
         let index = favorites.indexOf(carId);
@@ -777,8 +417,7 @@ function endTrip() {
     }
 
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    updateDiscountBadge();
 </script>
 </body>
 </html>
-
-
