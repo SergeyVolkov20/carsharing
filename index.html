@@ -747,14 +747,16 @@
         }, 1000);
     }
 
-    function endTrip() {
-        if (!currentTripId) return;
+function endTrip() {
+    if (!currentTripId) return;
+    
+  
+    if (confirm(`Завершить поездку? Стоимость: ${currentCost.toFixed(2)} ₽`)) {
         clearInterval(timerInterval);
-        let car = allCars.find(c => c.id == selectedCarId);
         alert(`Поездка завершена! Стоимость: ${currentCost.toFixed(2)} ₽`);
         location.reload();
     }
-
+}
     function toggleFavorite(carId, event) {
         event.stopPropagation();
         let index = favorites.indexOf(carId);
@@ -778,3 +780,5 @@
 </script>
 </body>
 </html>
+
+
