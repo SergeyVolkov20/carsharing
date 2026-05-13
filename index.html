@@ -88,6 +88,58 @@
         .legend { position: absolute; bottom: 20px; left: 20px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 8px; font-size: 11px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .legend span { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 4px; }
         @media (max-width: 992px) { .main-container { grid-template-columns: 1fr; height: auto; overflow-y: auto; } .map-panel { height: 400px; } }
+        .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 280px;
+    max-width: 350px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.modal-content p {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+}
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.modal-buttons button {
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.modal-confirm {
+    background: var(--accent);
+    color: white;
+}
+.modal-confirm:hover {
+    background: var(--accent-light);
+}
+.modal-cancel {
+    background: #e2e8f0;
+    color: var(--text-dark);
+}
+.modal-cancel:hover {
+    background: #cbd5e1;
+}
     </style>
 </head>
 <body>
@@ -383,41 +435,77 @@
         }, 1000);
     }
 
-    function endTrip() {
-        if (!currentTripId) return;
-        clearInterval(timerInterval);
-        let wasDiscounted = (tripCount > 0 && tripCount % 3 === 0);
-        let finalCost = wasDiscounted ? currentCost : currentCost;
-        let car = allCars.find(c => c.id == selectedCarId);
-        if (car) addToHistory(car.model, currentCost, wasDiscounted);
-        alert(`Поездка завершена! Стоимость: ${finalCost.toFixed(2)} ₽${wasDiscounted ? ' (со скидкой 10%!)' : ''}`);
-        tripCount++;
-        localStorage.setItem('tripCount', tripCount);
-        updateDiscountBadge();
-        location.reload();
-    }
+  function endTrip() {
+    if (!currentTripId) return;
+    
+    let wasDiscounted = (tripCount > 0 && tripCount % 3 === 0);
+    let finalCost = wasDiscounted ? currentCost * 0.9 : currentCost;
+    
+    document.getElementById('modal-message').innerHTML = `
+        Завершить поездку?<br><br>
+        Итоговая стоимость: ${finalCost.toFixed(2)} ₽
+        ${wasDiscounted ? '<br><br> Скидка 10% применена!' : ''}
+    `;
+    document.getElementById('confirmModal').style.display = 'flex';
+}
 
-    function toggleFavorite(carId, event) {
-        event.stopPropagation();
-        let index = favorites.indexOf(carId);
-        if (index === -1) favorites.push(carId);
-        else favorites.splice(index, 1);
-        localStorage.setItem('favorites', JSON.stringify(favorites));
-        renderCarList();
-    }
+function closeModal() {
+    document.getElementById('confirmModal').style.display = 'none';
+}
 
-    function updateStats() {
-        let avgPrice = allCars.reduce((s, c) => s + c.price, 0) / allCars.length;
-        document.getElementById('avg-price').innerHTML = avgPrice.toFixed(1) + ' ₽/мин';
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark');
-        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-    }
-
-    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+function confirmEndTrip() {
+    if (!currentTripId) return;
+    closeModal();
+    
+    clearInterval(timerInterval);
+    let wasDiscounted = (tripCount > 0 && tripCount % 3 === 0);
+    let finalCost = wasDiscounted ? currentCost * 0.9 : currentCost;
+    let car = allCars.find(c => c.id == selectedCarId);
+    if (car) addToHistory(car.model, currentCost, wasDiscounted);
+    
+    alert(`Поездка завершена! Стоимость: ${finalCost.toFixed(2)} ₽${wasDiscounted ? ' (со скидкой 10%!)' : ''}`);
+    tripCount++;
+    localStorage.setItem('tripCount', tripCount);
     updateDiscountBadge();
+    location.reload();
+}
+
+function toggleFavorite(carId, event) {
+    event.stopPropagation();
+    let index = favorites.indexOf(carId);
+    if (index === -1) favorites.push(carId);
+    else favorites.splice(index, 1);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    renderCarList();
+}
+
+function updateStats() {
+    let avgPrice = allCars.reduce((s, c) => s + c.price, 0) / allCars.length;
+    document.getElementById('avg-price').innerHTML = avgPrice.toFixed(1) + ' ₽/мин';
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+updateDiscountBadge();
 </script>
+</script>
+
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-car" style="font-size: 2rem; color: var(--accent);"></i>
+        <p id="modal-message">Завершить поездку?</p>
+        <div class="modal-buttons">
+            <button class="modal-cancel" onclick="closeModal()">Отмена</button>
+            <button class="modal-confirm" onclick="confirmEndTrip()">Завершить</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
 </body>
 </html>
